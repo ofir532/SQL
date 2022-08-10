@@ -50,7 +50,7 @@ WHERE Students.Id = 4
 SELECT CoursesStudents.CourseId
 ,Courses.CourseName
 ,CoursesStudents.StudentId
-,Students.FirstName + Students.LastName AS FullName
+,Students.FirstName + ' '+ Students.LastName AS FullName
 ,CoursesStudents.Grade
 FROM Students
 INNER JOIN CoursesStudents ON CoursesStudents.StudentId = Students.Id
