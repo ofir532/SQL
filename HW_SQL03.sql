@@ -35,8 +35,7 @@ SELECT
 	,departments.department_name
 FROM employees
 	 INNER JOIN departments ON departments.department_id = employees.department_id
-WHERE
-	departments.department_id IN (80,40)
+WHERE departments.department_id IN (80,40)
 --05
 SELECT 
   employees.first_name 
@@ -47,8 +46,7 @@ SELECT
 FROM employees 
 	INNER JOIN departments ON employees.department_id = departments.department_id 
 	INNER JOIN locations ON departments.location_id = locations.location_id 
-WHERE 
-employees.first_name LIKE '%z%';
+WHERE employees.first_name LIKE '%z%';
 --06
 SELECT 
   employees.first_name 
@@ -63,8 +61,7 @@ SELECT
  ,employees.last_name 
  ,employees.salary
 FROM employees
-WHERE
-  employees.salary > ANY (SELECT employees.salary FROM employees WHERE employees.employee_id = 182)
+WHERE employees.salary > ANY (SELECT employees.salary FROM employees WHERE employees.employee_id = 182)
 --08
 SELECT
   E.first_name AS employee_name
@@ -114,8 +111,8 @@ FROM employees
 	INNER JOIN departments ON departments.department_id = employees.department_id
 	INNER JOIN jobs ON jobs.job_id = employees.job_id 
 	INNER JOIN job_history ON job_history.employee_id = employees.employee_id
-WHERE
-  job_history.start_date = '1993-01-01' AND job_history.end_date BETWEEN '1993-01-01' AND '1997-08-31'
+WHERE job_history.start_date = '1993-01-01' 
+AND job_history.end_date BETWEEN '1993-01-01' AND '1997-08-31'
 --14
 SELECT 
   jobs.job_title
@@ -126,31 +123,57 @@ SELECT
 FROM employees
 	 INNER JOIN jobs ON jobs.job_id = employees.job_id
 --15
+DECLARE @AVG_SALARY TABLE (department_id INT NOT NULL, average_salary DECIMAL(18,2)  NULL)
+INSERT INTO @AVG_SALARY
 SELECT 
 	 employees.department_id
 	,AVG(employees.salary) AS average_salary
-INTO #TempTable1 FROM employees
+FROM employees
 GROUP BY employees.department_id
 
-SELECT  
+DECLARE @COUNT_COMMISION TABLE (department_id INT NOT NULL, num_of_employees_with_commision INT  NULL)
+INSERT INTO @COUNT_COMMISION
+SELECT 
 	 employees.department_id
 	,COUNT(employees.employee_id) AS number_of_employees_with_commision
-INTO #TempTable2 FROM employees
+FROM employees
 WHERE employees.commission_pct > 0
 GROUP BY employees.department_id
 
 SELECT 
-	departments.department_name
-	,#TempTable1.average_salary
-	,ISNULL (#TempTable2.number_of_employees_with_commision,0) AS number_of_employees_with_commision
+	 departments.department_name
+	,AVG_SALARY.average_salary
+	,ISNULL (COUNT_COMMISION.num_of_employees_with_commision,0) AS number_of_employees_with_commision
 FROM departments
-	 INNER JOIN #TempTable1 ON #TempTable1.department_id = departments.department_id
-	 LEFT JOIN #TempTable2 ON #TempTable2.department_id = departments.department_id
+	 INNER JOIN @AVG_SALARY AS AVG_SALARY ON AVG_SALARY.department_id = departments.department_id
+	 LEFT JOIN  @COUNT_COMMISION AS COUNT_COMMISION ON COUNT_COMMISION.department_id = departments.department_id
 ORDER BY average_salary DESC
-
 --16
+SELECT 
+	 jobs.job_title
+	,employees.first_name + ' ' + employees.last_name AS employees_name
+	,jobs.max_salary - employees.salary AS salary_difference
+FROM employees
+	 INNER JOIN jobs ON jobs.job_id = employees.job_id
+WHERE employees.department_id  = 80
 --17
+SELECT 
+	countries.country_name
+	,locations.city
+	,departments.department_name
+FROM countries
+	 INNER JOIN locations ON locations.country_id = countries.country_id
+	 INNER JOIN departments ON departments.location_id = locations.location_id
+
 --18
+SELECT 
+	 departments.department_name
+	,employees.first_name + ' ' + employees.last_name AS name_of_manager
+FROM employees
+	 INNER JOIN departments ON departments.manager_id = employees.employee_id
+
+
+	 SELECT * FROM employees
 --19
 --20
 --21
