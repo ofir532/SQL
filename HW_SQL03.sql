@@ -172,6 +172,17 @@ SELECT
 FROM employees
 	 INNER JOIN departments ON departments.manager_id = employees.employee_id
 --19
+SELECT 
+	 jobs.job_title
+	,CAST(AVG(employees.salary) AS DECIMAL(18, 2)) AS avg_salary
+FROM employees
+	 INNER JOIN jobs ON jobs.job_id = employees.job_id
+GROUP BY jobs.job_title
 --20
+SELECT 
+	 job_history.*
+FROM employees
+	 INNER JOIN job_history ON job_history.employee_id = employees.employee_id
+WHERE employees.salary >= 12000
 --21
 --22
