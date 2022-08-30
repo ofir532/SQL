@@ -11,7 +11,8 @@ SELECT
 	Products.ProductName
 FROM 
 	Products
-WHERE Products.Discontinued = 0
+WHERE 
+	Products.Discontinued = 0
 
 --03
 SELECT 
@@ -19,7 +20,8 @@ SELECT
 	Products.ProductName
 FROM 
 	Products
-WHERE Products.Discontinued = 1
+WHERE 
+	Products.Discontinued = 1
 
 --04
 SELECT 
@@ -71,7 +73,8 @@ FROM
 ORDER BY Products.UnitPrice DESC
 
 --09
-SELECT 	COUNT(*) AS NumOfProducts,
+SELECT 	
+	COUNT(*) AS NumOfProducts,
 CASE 
 	WHEN Products.Discontinued = 0 THEN 'False'
 	WHEN Products.Discontinued = 1 THEN 'True' 
