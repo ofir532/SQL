@@ -78,7 +78,6 @@ CASE
 	END AS Discontinued
 FROM 
 	Products
-GROUP BY Products.Discontinued
 
 --10
 SELECT
@@ -89,4 +88,3 @@ FROM
 	Products
 WHERE
 	Products.UnitsInStock < Products.UnitsOnOrder
-ORDER BY Products.UnitPrice DESC
